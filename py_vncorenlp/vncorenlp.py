@@ -74,6 +74,21 @@ class VnCoreNLP:
             list_dict_words.append(dict_word)
         return list_dict_words
 
+    def tokenize(self, sentence):
+        from jnius import autoclass
+        javaclass_Annotation = autoclass('vn.pipeline.Annotation')
+        str = self.javaclass_String(sentence)
+        annotation = javaclass_Annotation(str)
+        self.model.annotate(annotation)
+        output = annotation.toString().replace("\n\n", "")
+        list_words = output.split("\n")
+        list_segmented_words = []
+        for word in list_words:
+            word = word.replace("\t\t", "\t")
+            list_tags = word.split("\t")
+            list_segmented_words.append(list_tags[1])
+        return " ".join(list_segmented_words)
+
     def print_out(self, list_dict_words):
         for word in list_dict_words:
             print(str(word["index"]) + "\t" + word["wordForm"] + "\t" + word["posTag"] + "\t" + word["nerLabel"] + "\t" + str(word["head"]) + "\t" + word["depLabel"])
@@ -85,7 +100,7 @@ class VnCoreNLP:
 
 if __name__ == '__main__':
     download_model()
-    model = VnCoreNLP(annotators=["parse"])
-    output = model.annotate_sentence("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
-    model.print_out(output)
+    model = VnCoreNLP(annotators=["wseg"])
+    output = model.tokenize("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
+    print(output)
     model.annotate_file(input_file="/home/vinai/Desktop/testvncore/input.txt", output_file="/home/vinai/Desktop/testvncore/output.txt")

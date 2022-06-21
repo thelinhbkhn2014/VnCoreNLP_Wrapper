@@ -45,3 +45,12 @@ By default, the output for each input sentence is formatted with 6 columns repre
 8       Hà_Nội  Np      I-ORG   6       nmod
 9       .       CH      O       4       punct
 ```
+
+In addition, to be convenient for users who use only the VnCoreNLP for the word segmentation, we also provide a function only for this:
+
+```python
+sentence = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."
+output = model.tokenize(sentence)
+print(output)
+# The result: "Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội ."
+```
