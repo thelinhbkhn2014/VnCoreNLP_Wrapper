@@ -81,7 +81,7 @@ class VnCoreNLP:
             list_dict_words.append(dict_word)
         return list_dict_words
 
-    def tokenize(self, sentence):
+    def word_segment(self, sentence):
         from jnius import autoclass
         javaclass_Annotation = autoclass('vn.pipeline.Annotation')
         str = self.javaclass_String(sentence)
@@ -108,6 +108,6 @@ class VnCoreNLP:
 if __name__ == '__main__':
     download_model(save_dir='/home/vinai/Desktop/testvncore')
     model = VnCoreNLP(annotators=["wseg"], save_dir='/home/vinai/Desktop/testvncore')
-    output = model.tokenize("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
+    output = model.word_segment("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
     print(output)
     model.annotate_file(input_file="/home/vinai/Desktop/testvncore/input.txt", output_file="/home/vinai/Desktop/testvncore/output.txt")

@@ -49,8 +49,9 @@ By default, the output for each input sentence is formatted with 6 columns repre
 In addition, to be convenient for users who use only the VnCoreNLP for the word segmentation, we also provide a function only for this:
 
 ```python
+model = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./')
 sentence = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."
-output = model.tokenize(sentence)
+output = model.word_segment(sentence)
 print(output)
 # The result: "Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội ."
 ```
