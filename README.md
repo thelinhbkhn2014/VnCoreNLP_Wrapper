@@ -19,20 +19,22 @@
 ```python
 import py_vncorenlp
 
-# Automatically download the VnCoreNLP model from the original resitory
-py_vncorenlp.download_model(save_dir='./')
+# Automatically download VnCoreNLP models from the original repository
+# and save them in some local machine folder
+py_vncorenlp.download_model(save_dir='./vncorenlp')
 
-# Load the pretrained VnCoreNLP model
-model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"], save_dir='./')
+# Load VnCoreNLP from the local machine folder containing the VnCoreNLP models
+model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"], save_dir='./vncorenlp')
+# Equivalent to: model = py_vncorenlp.VnCoreNLP(save_dir='./vncorenlp')
 
-# Annotate a corpus where each line represents a raw sentence
-model.annotate_file(input_file="input.txt", output_file="output.txt")
+# Annotate a raw corpus
+model.annotate_file(input_file="path_to_input_file", output_file="path_to_output_file")
 
 # Annotate a raw sentence
 model.print_out(model.annotate_sentence("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."))
 ```
 
-By default, the output for each input sentence is formatted with 6 columns representing word index, word form, POS tag, NER label, head index of the current word and its dependency relation type:
+By default, the output is formatted with 6 columns representing word index, word form, POS tag, NER label, head index of the current word and its dependency relation type:
 
 ```
 1       Ông     Nc      O       4       sub
@@ -46,12 +48,12 @@ By default, the output for each input sentence is formatted with 6 columns repre
 9       .       CH      O       4       punct
 ```
 
-In addition, to be convenient for users who use only the VnCoreNLP for the word segmentation, we also provide a function only for this:
+In addition, for users who use only VnCoreNLP for word segmentation:
 
 ```python
-model = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./')
+rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./vncorenlp')
 sentence = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."
-output = model.word_segment(sentence)
+output = rdrsegmenter.word_segment(sentence)
 print(output)
-# The result: "Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội ."
+# "Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội ."
 ```
