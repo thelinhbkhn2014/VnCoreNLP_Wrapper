@@ -30,7 +30,7 @@ model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"], save_
 # Annotate a raw corpus
 model.annotate_file(input_file="path_to_input_file", output_file="path_to_output_file")
 
-# Annotate a raw sentence
+# Annotate a raw text
 model.print_out(model.annotate_text("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."))
 ```
 
