@@ -20,10 +20,10 @@
 import py_vncorenlp
 
 # Automatically download the VnCoreNLP model from the original resitory
-py_vncorenlp.download_model()
+py_vncorenlp.download_model(save_dir='./')
 
 # Load the pretrained VnCoreNLP model
-model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"])
+model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"], save_dir='./')
 
 # Annotate a corpus where each line represents a raw sentence
 model.annotate_file(input_file="input.txt", output_file="output.txt")

@@ -3,44 +3,51 @@ import os
 import shutil
 
 
-def download_model():
-    if os.path.isdir("./models") == False:
-        os.mkdir("./models")
-        os.mkdir("./models/dep")
-        os.mkdir("./models/ner")
-        os.mkdir("./models/postagger")
-        os.mkdir("./models/wordsegmenter")
+def download_model(save_dir='./'):
+    # current_path = os.path.abspath(os.getcwd())
+    if save_dir[-1] == '/':
+        save_dir = save_dir[:-1]
+    if os.path.isdir(save_dir + "/models") and os.path.exists(save_dir + '/VnCoreNLP-1.1.1.jar'):
+        print("The VnCoreNLP model is already!")
+    else:
+        os.mkdir(save_dir + "/models")
+        os.mkdir(save_dir + "/models/dep")
+        os.mkdir(save_dir + "/models/ner")
+        os.mkdir(save_dir + "/models/postagger")
+        os.mkdir(save_dir + "/models/wordsegmenter")
+        # jar
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/VnCoreNLP-1.1.1.jar")
+        shutil.move("VnCoreNLP-1.1.1.jar", save_dir + "/VnCoreNLP-1.1.1.jar")
         # wordsegmenter
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/vi-vocab")
         os.system(
             "wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/wordsegmenter.rdr")
-        shutil.move("vi-vocab", "./models/wordsegmenter/vi-vocab")
-        shutil.move("wordsegmenter.rdr", "./models/wordsegmenter/wordsegmenter.rdr")
+        shutil.move("vi-vocab", save_dir + "/models/wordsegmenter/vi-vocab")
+        shutil.move("wordsegmenter.rdr", save_dir + "/models/wordsegmenter/wordsegmenter.rdr")
         # postagger
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/postagger/vi-tagger")
-        shutil.move("vi-tagger", "./models/postagger/vi-tagger")
+        shutil.move("vi-tagger", save_dir + "/models/postagger/vi-tagger")
         # ner
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/ner/vi-500brownclusters.xz")
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/ner/vi-ner.xz")
         os.system(
             "wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/ner/vi-pretrainedembeddings.xz")
-        shutil.move("vi-500brownclusters.xz", "./models/ner/vi-500brownclusters.xz")
-        shutil.move("vi-ner.xz", "./models/ner/vi-ner.xz")
-        shutil.move("vi-pretrainedembeddings.xz", "./models/ner/vi-pretrainedembeddings.xz")
+        shutil.move("vi-500brownclusters.xz", save_dir + "/models/ner/vi-500brownclusters.xz")
+        shutil.move("vi-ner.xz", save_dir + "/models/ner/vi-ner.xz")
+        shutil.move("vi-pretrainedembeddings.xz", save_dir + "/models/ner/vi-pretrainedembeddings.xz")
         # parse
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/dep/vi-dep.xz")
-        shutil.move("vi-dep.xz", "./models/dep/vi-dep.xz")
-    else:
-        print("The VnCoreNLP model is already!")
+        shutil.move("vi-dep.xz", save_dir + "/models/dep/vi-dep.xz")
 
 
 class VnCoreNLP:
-    def __init__(self, max_heap_size='-Xmx2g', annotators=["wseg", "pos", "ner", "parse"]):
-        if os.path.isdir("./models") == False:
+    def __init__(self, max_heap_size='-Xmx2g', annotators=["wseg", "pos", "ner", "parse"], save_dir = './'):
+        if save_dir[-1] == '/':
+            save_dir = save_dir[:-1]
+        if os.path.isdir(save_dir + "/models") == False or os.path.exists(save_dir + '/VnCoreNLP-1.1.1.jar') == False:
             raise Exception("Please download the VnCoreNLP model before initialization!")
         jnius_config.add_options(max_heap_size)
-        jnius_config.set_classpath("./VnCoreNLP-1.1.1.jar")
+        jnius_config.set_classpath(save_dir + "/VnCoreNLP-1.1.1.jar")
         from jnius import autoclass
         javaclass_vncorenlp = autoclass('vn.pipeline.VnCoreNLP')
         self.javaclass_String = autoclass('java.lang.String')
@@ -99,8 +106,8 @@ class VnCoreNLP:
         self.model.processPipeline(input_str, output_str, self.annotators)
 
 if __name__ == '__main__':
-    download_model()
-    model = VnCoreNLP(annotators=["wseg"])
+    download_model(save_dir='/home/vinai/Desktop/testvncore')
+    model = VnCoreNLP(annotators=["wseg"], save_dir='/home/vinai/Desktop/testvncore')
     output = model.tokenize("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
     print(output)
     model.annotate_file(input_file="/home/vinai/Desktop/testvncore/input.txt", output_file="/home/vinai/Desktop/testvncore/output.txt")
