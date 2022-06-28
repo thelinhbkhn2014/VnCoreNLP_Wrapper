@@ -52,8 +52,8 @@ In addition, for users who use only VnCoreNLP for word segmentation:
 
 ```python
 rdrsegmenter = py_vncorenlp.VnCoreNLP(annotators=["wseg"], save_dir='./vncorenlp')
-sentence = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."
-output = rdrsegmenter.word_segment(sentence)
+text = "Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."
+output = rdrsegmenter.word_segment(text)
 print(output)
 # "Ông Nguyễn_Khắc_Chúc đang làm_việc tại Đại_học Quốc_gia Hà_Nội ."
 ```
