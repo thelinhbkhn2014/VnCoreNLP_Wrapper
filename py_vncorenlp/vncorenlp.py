@@ -87,20 +87,23 @@ class VnCoreNLP:
             dict_sentences[i] = list_dict_words
         return dict_sentences
 
-    def word_segment(self, sentence):
+    def word_segment(self, text):
         from jnius import autoclass
         javaclass_Annotation = autoclass('vn.pipeline.Annotation')
-        str = self.javaclass_String(sentence)
+        str = self.javaclass_String(text)
         annotation = javaclass_Annotation(str)
         self.model.annotate(annotation)
-        output = annotation.toString().replace("\n\n", "")
-        list_words = output.split("\n")
-        list_segmented_words = []
-        for word in list_words:
-            word = word.replace("\t\t", "\t")
-            list_tags = word.split("\t")
-            list_segmented_words.append(list_tags[1])
-        return " ".join(list_segmented_words)
+        list_segmented_sentences = []
+        list_sentences = annotation.toString().split("\n\n")[:-1]
+        for sent in list_sentences:
+            list_words = sent.split("\n")
+            list_segmented_words = []
+            for word in list_words:
+                word = word.replace("\t\t", "\t")
+                list_tags = word.split("\t")
+                list_segmented_words.append(list_tags[1])
+            list_segmented_sentences.append(" ".join(list_segmented_words))
+        return list_segmented_sentences
 
     def print_out(self, dict_sentences):
         for sent in dict_sentences.keys():
@@ -122,3 +125,4 @@ if __name__ == '__main__':
     print(output)
     model.print_out(output)
     model.annotate_file(input_file="/home/vinai/Desktop/testvncore/t/input.txt", output_file="output.txt")
+    print(model.word_segment("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."))
