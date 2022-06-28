@@ -47,6 +47,8 @@ class VnCoreNLP:
         if os.path.isdir(save_dir + "/models") == False or os.path.exists(save_dir + '/VnCoreNLP-1.1.1.jar') == False:
             raise Exception("Please download the VnCoreNLP model before initialization!")
         jnius_config.add_options(max_heap_size)
+        self.current_working_dir = os.getcwd()
+        os.chdir(save_dir)
         jnius_config.set_classpath(save_dir + "/VnCoreNLP-1.1.1.jar")
         from jnius import autoclass
         javaclass_vncorenlp = autoclass('vn.pipeline.VnCoreNLP')
@@ -54,6 +56,7 @@ class VnCoreNLP:
         self.annotators = annotators
         if "wseg" not in annotators:
             self.annotators.append("wseg")
+
         self.model = javaclass_vncorenlp(annotators)
 
     def annotate_sentence(self, sentence):
@@ -101,6 +104,10 @@ class VnCoreNLP:
             print(str(word["index"]) + "\t" + word["wordForm"] + "\t" + word["posTag"] + "\t" + word["nerLabel"] + "\t" + str(word["head"]) + "\t" + word["depLabel"])
 
     def annotate_file(self, input_file, output_file):
+        if input_file[0] == ".":
+            input_file = self.current_working_dir + input_file[1:]
+        if output_file[0] == ".":
+            output_file = self.current_working_dir + output_file[1:]
         input_str = self.javaclass_String(input_file)
         output_str = self.javaclass_String(output_file)
         self.model.processPipeline(input_str, output_str, self.annotators)
@@ -110,4 +117,4 @@ if __name__ == '__main__':
     model = VnCoreNLP(annotators=["wseg"], save_dir='/home/vinai/Desktop/testvncore')
     output = model.word_segment("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội.")
     print(output)
-    model.annotate_file(input_file="/home/vinai/Desktop/testvncore/input.txt", output_file="/home/vinai/Desktop/testvncore/output.txt")
+    model.annotate_file(input_file="/home/vinai/Desktop/testvncore/input.txt", output_file="/home/vinai/Documents/VnCoreNLP_Wrapper/output.txt")
