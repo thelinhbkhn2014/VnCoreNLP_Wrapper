@@ -31,7 +31,7 @@ model = py_vncorenlp.VnCoreNLP(annotators=["wseg", "pos", "ner", "parse"], save_
 model.annotate_file(input_file="path_to_input_file", output_file="path_to_output_file")
 
 # Annotate a raw sentence
-model.print_out(model.annotate_sentence("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."))
+model.print_out(model.annotate_text("Ông Nguyễn Khắc Chúc  đang làm việc tại Đại học Quốc gia Hà Nội."))
 ```
 
 By default, the output is formatted with 6 columns representing word index, word form, POS tag, NER label, head index of the current word and its dependency relation type:
