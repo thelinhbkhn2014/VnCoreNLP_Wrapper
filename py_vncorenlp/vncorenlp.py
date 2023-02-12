@@ -7,8 +7,8 @@ def download_model(save_dir='./'):
     # current_path = os.path.abspath(os.getcwd())
     if save_dir[-1] == '/':
         save_dir = save_dir[:-1]
-    if os.path.isdir(save_dir + "/models") and os.path.exists(save_dir + '/VnCoreNLP-1.1.1.jar'):
-        print("The VnCoreNLP model is already!")
+    if os.path.isdir(save_dir + "/models") and os.path.exists(save_dir + '/VnCoreNLP-1.2.jar'):
+        print("VnCoreNLP model folder " + save_dir + " already exists! Please load VnCoreNLP from this folder!")
     else:
         os.mkdir(save_dir + "/models")
         os.mkdir(save_dir + "/models/dep")
@@ -16,8 +16,8 @@ def download_model(save_dir='./'):
         os.mkdir(save_dir + "/models/postagger")
         os.mkdir(save_dir + "/models/wordsegmenter")
         # jar
-        os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/VnCoreNLP-1.1.1.jar")
-        shutil.move("VnCoreNLP-1.1.1.jar", save_dir + "/VnCoreNLP-1.1.1.jar")
+        os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/VnCoreNLP-1.2.jar")
+        shutil.move("VnCoreNLP-1.2.jar", save_dir + "/VnCoreNLP-1.2.jar")
         # wordsegmenter
         os.system("wget https://raw.githubusercontent.com/vncorenlp/VnCoreNLP/master/models/wordsegmenter/vi-vocab")
         os.system(
@@ -44,12 +44,12 @@ class VnCoreNLP:
     def __init__(self, max_heap_size='-Xmx2g', annotators=["wseg", "pos", "ner", "parse"], save_dir = './'):
         if save_dir[-1] == '/':
             save_dir = save_dir[:-1]
-        if os.path.isdir(save_dir + "/models") == False or os.path.exists(save_dir + '/VnCoreNLP-1.1.1.jar') == False:
-            raise Exception("Please download the VnCoreNLP model before initialization!")
+        if os.path.isdir(save_dir + "/models") == False or os.path.exists(save_dir + '/VnCoreNLP-1.2.jar') == False:
+            raise Exception("Please download the VnCoreNLP model!")
         jnius_config.add_options(max_heap_size)
         self.current_working_dir = os.getcwd()
         os.chdir(save_dir)
-        jnius_config.set_classpath(save_dir + "/VnCoreNLP-1.1.1.jar")
+        jnius_config.set_classpath(save_dir + "/VnCoreNLP-1.2.jar")
         from jnius import autoclass
         javaclass_vncorenlp = autoclass('vn.pipeline.VnCoreNLP')
         self.javaclass_String = autoclass('java.lang.String')
