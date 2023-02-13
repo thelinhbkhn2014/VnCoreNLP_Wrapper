@@ -58,6 +58,7 @@ class VnCoreNLP:
             self.annotators.append("wseg")
 
         self.model = javaclass_vncorenlp(annotators)
+        os.chdir(self.current_working_dir)
 
     def annotate_text(self, text):
         from jnius import autoclass
@@ -113,7 +114,7 @@ class VnCoreNLP:
             print("")
 
     def annotate_file(self, input_file, output_file):
-        os.chdir(self.current_working_dir)
+        # os.chdir(self.current_working_dir)
         input_str = self.javaclass_String(input_file)
         output_str = self.javaclass_String(output_file)
         self.model.processPipeline(input_str, output_str, self.annotators)
